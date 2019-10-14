@@ -19,7 +19,7 @@ const resolvers = {
   Query: {
     getAll: () => pokedex,
     getByName: (parent, args) => findByName(pokedex, args.name),
-    getByType: (parent, args, ctx, info) => findByType(pokedex, args.type),
+    getByType: (parent, args) => findByType(pokedex, args.type),
     getTypes: () => pokemonTypes
   },
   Pokemon: {
