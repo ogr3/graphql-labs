@@ -1,0 +1,148 @@
+[
+  {
+    "name": "Normal",
+    "strongVs": [],
+    "weakVs": ["Rock", "Steel", "Ghost"],
+    "resist": ["Ghost"],
+    "vulnerableTo": ["Fighting"]
+  },
+  {
+    "name": "Fighting",
+    "strongVs": ["Normal", "Rock", "Steel", "Ice", "Dark"],
+    "weakVs": ["Flying", "Poison", "Bug", "Psychic", "Ghost"],
+    "resist": ["Rock", "Bug", "Dark"],
+    "vulnerableTo": ["Flying", "Psychic", "Fairy"]
+  },
+  {
+    "name": "Flying",
+    "strongVs": ["Fighting", "Bug", "Grass", "Fairy"],
+    "weakVs": ["Rock", "Steel", "Electric"],
+    "resist": ["Ground", "Fighting", "Bug", "Grass"],
+    "vulnerableTo": ["Rock", "Electric", "Ice"]
+  },
+  {
+    "name": "Poison",
+    "strongVs": ["Grass", "Fairy"],
+    "weakVs": ["Poison", "Ground", "Rock", "Ghost"],
+    "resist": ["Fighting", "Poison", "Bug", "Grass", "Fairy"],
+    "vulnerableTo": ["Ground", "Psychic"]
+  },
+  {
+    "name": "Ground",
+    "strongVs": ["Poison", "Rock", "Steel", "Fire", "Electric"],
+    "weakVs": ["Bug", "Grass"],
+    "resist": ["Poison", "Rock"],
+    "vulnerableTo": ["Water", "Grass", "Ice"]
+  },
+  {
+    "name": "Rock",
+    "strongVs": ["Flying", "Bug", "Fire", "Ice"],
+    "weakVs": ["Fighting", "Ground", "Steel"],
+    "resist": ["Poison", "Rock"],
+    "vulnerableTo": ["Water", "Grass", "Ice"]
+  },
+  {
+    "name": "Bug",
+    "strongVs": ["Grass", "Psychic", "Dark"],
+    "weakVs": [
+      "Fighting",
+      "Flying",
+      "Poison",
+      "Ghost",
+      "Steel",
+      "Fire",
+      "Fairy"
+    ],
+    "resist": ["Fighting", "Ground", "Grass"],
+    "vulnerableTo": ["Flying", "Rock", "Fire"]
+  },
+  {
+    "name": "Ghost",
+    "strongVs": ["Ghost", "Psychic"],
+    "weakVs": ["Normal", "Dark"],
+    "resist": ["Normal", "Fighting", "Poison", "Bug"],
+    "vulnerableTo": ["Ghost", "Dark"]
+  },
+  {
+    "name": "Steel",
+    "strongVs": ["Rock", "Ice", "Fairy"],
+    "weakVs": ["Steel", "Fire", "Water", "Electric"],
+    "resist": [
+      "Normal",
+      "Flying",
+      "Poison",
+      "Rock",
+      "Bug",
+      "Steel",
+      "Grass",
+      "Psychic",
+      "Ice",
+      "Dragon",
+      "Fairy"
+    ],
+    "vulnerableTo": ["Fighting", "Fire", "Poison"]
+  },
+  {
+    "name": "Fire",
+    "strongVs": ["Bug", "Steel", "Grass", "Ice"],
+    "weakVs": ["Rock", "Fire", "Water", "Dragon"],
+    "resist": ["Bug", "Steel", "Fire", "Grass", "Ice", "Fairy"],
+    "vulnerableTo": ["Ground", "Rock", "Water"]
+  },
+  {
+    "name": "Water",
+    "strongVs": ["Ground", "Rock", "Fire"],
+    "weakVs": ["Water", "Grass", "Dragon"],
+    "resist": ["Steel", "Fire", "Water", "Ice"],
+    "vulnerableTo": ["Grass", "Electric"]
+  },
+  {
+    "name": "Grass",
+    "strongVs": ["Ground", "Rock", "Water"],
+    "weakVs": ["Flying", "Poison", "Bug", "Steel", "Fire", "Grass"],
+    "resist": ["Water", "Grass", "Electric"],
+    "vulnerableTo": ["Flying", "Poison", "Bug", "Fire", "Ice"]
+  },
+  {
+    "name": "Electric",
+    "strongVs": ["Flying", "Water"],
+    "weakVs": ["Ground", "Grass", "Electric"],
+    "resist": ["Flying", "Steel", "Electric"],
+    "vulnerableTo": ["Ground"]
+  },
+  {
+    "name": "Psychic",
+    "strongVs": ["Fighting", "Poison"],
+    "weakVs": ["Steel", "Psychic", "Dark"],
+    "resist": ["Fighting", "Psychic"],
+    "vulnerableTo": ["Bug", "Ghost", "Dark"]
+  },
+  {
+    "name": "Ice",
+    "strongVs": ["Flying", "Ground", "Grass", "Dragon"],
+    "weakVs": ["Steel", "Fire", "Water", "Ice"],
+    "resist": ["Ice"],
+    "vulnerableTo": ["Fighting", "Rock", "Steel", "Fire"]
+  },
+  {
+    "name": "Dragon",
+    "strongVs": ["Dragon"],
+    "weakVs": ["Steel"],
+    "resist": ["Fire", "Water", "Grass", "Electric"],
+    "vulnerableTo": ["Ice", "Dragon", "Fairy"]
+  },
+  {
+    "name": "Dark",
+    "strongVs": ["Ghost", "Psychic"],
+    "weakVs": ["Fighting", "Dark", "Fairy"],
+    "resist": ["Ghost", "Psychic", "Dark"],
+    "vulnerableTo": ["Fighting", "Bug", "Fairy"]
+  },
+  {
+    "name": "Fairy",
+    "strongVs": ["Fighting", "Dragon", "Dark"],
+    "weakVs": ["Poison", "Steel", "Fire"],
+    "resist": ["Fighting", "Bug", "Dark"],
+    "vulnerableTo": ["Poison", "Ghost", "Dragon"]
+  }
+]
