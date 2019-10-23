@@ -4,19 +4,18 @@
 
 Labb 1 går ut på att utforska ett enklare GraphQL-API mot en lokalt körande server.
 
-Börja med att checka ut servern från Github
+Börja med att uppdatera submodulerna, detta för att hämta checka ut lite labbdata.
 
 ```
-git checkout https://github.com/CAG-Contactor/pokeworld-backend.git
-
-git submodule update --init --recursive
+$ git submodule update --init --recursive
 ```
 
 Sedan startar man servern via NPM
 
 ```
-npm install
-npm start
+$ cd backend
+$ npm install
+$ npm start
 ```
 
 Gå därefter till [http://localhost:4000/graphql](http://localhost:4000/graphql) och bekanta dig med den interaktiva GraphQL-klienten.
@@ -28,13 +27,13 @@ I denna labb ska vi skapa en egen GraphQL-klient i React. Vi kommer att använda
 Precis som under vår tidigare kompetensdag runt React så kommer vi här använda oss av `create-react-app` för att skapa vår application
 
 ```
-$ npx create-react-app pokeworld-client
+$ npx create-react-app client
 ```
 
 Efter att allt installerats så startar vi klienten och verifierar att allt verkar funka.
 
 ```
-$ cd pokeworld-client
+$ cd client
 $ npm start
 ```
 
