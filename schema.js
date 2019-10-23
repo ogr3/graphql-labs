@@ -1,6 +1,6 @@
 const { gql } = require("apollo-server-koa");
 
-const typeDefs = gql`
+module.exports = gql`
   type Stats {
     HP: Int!
     Attack: Int!
@@ -31,11 +31,11 @@ const typeDefs = gql`
   type Query {
     getAll: [Pokemon!]!
     getByType(type: ID!): [Pokemon!]!
-    getByName(name: String!): Pokemon!
+    getByName(name: String!): Pokemon
     getTypes: [PokeType!]!
   }
-`;
 
-module.exports = {
-    typeDefs
-}
+  type Mutation {
+    changeName(id: ID!, newName: String!): Pokemon
+  }
+`;

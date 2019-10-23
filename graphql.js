@@ -1,5 +1,5 @@
 const { ApolloServer } = require("apollo-server-koa");
-const { typeDefs } = require("./schema");
+const schema = require("./schema");
 const { pokemonTypes } = require("./pokemon-types");
 const { pokedex } = require("./pokedex.js");
 
@@ -8,11 +8,27 @@ function findByType(pokemons, type) {
 }
 
 function findByName(pokemons, name) {
-  return pokemons.filter(pokemon => pokemon.name === name)[0]
+  return pokemons.filter(pokemon => pokemon.name === name)[0];
 }
 
 function filterTypes(allTypes, ids) {
   return allTypes.filter(type => ids.includes(type.id));
+}
+
+function changeName(id, newName) {
+  console.log("Changing name", id, newName);
+  const pokemon = pokedex.find(pokemon => {
+    if (pokemon.id == "1") {
+      console.log("Found Bulba", pokemon);
+    }
+    return pokemon.id == id;
+  });
+  if (pokemon) {
+    pokemon.name = newName;
+  }
+
+  console.log("New pokemon:", pokemon);
+  return pokemon;
 }
 
 const resolvers = {
@@ -21,6 +37,9 @@ const resolvers = {
     getByName: (parent, args) => findByName(pokedex, args.name),
     getByType: (parent, args) => findByType(pokedex, args.type),
     getTypes: () => pokemonTypes
+  },
+  Mutation: {
+    changeName: (parent, args) => changeName(args.id, args.newName)
   },
   Pokemon: {
     type: parent => filterTypes(pokemonTypes, parent.type)
@@ -34,9 +53,9 @@ const resolvers = {
 };
 
 function applyGraphQLMiddleware(app) {
-  const server = new ApolloServer({ typeDefs, resolvers });
+  const server = new ApolloServer({ typeDefs: schema, resolvers });
 
-  server.applyMiddleware({app})
+  server.applyMiddleware({ app });
 }
 
-exports.applyGraphQLMiddleware = applyGraphQLMiddleware
+exports.applyGraphQLMiddleware = applyGraphQLMiddleware;
