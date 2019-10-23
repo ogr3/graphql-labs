@@ -6,9 +6,9 @@ function applyRestMiddleware(app) {
   const router = new Router()
 
   // Return a list of random pokemons
-  router.get("/api/random_pokemons/:nr", (ctx, next) => {
+  router.get("/api/random_pokemons/:nr", ctx => {
     const pokemons = _.sampleSize(pokedex, ctx.params.nr)
-    ctx.body = JSON.stringify(pokemons.map(pokemon => pokemon.id))
+    ctx.body = pokemons 
   })
 
   app.use(router.routes())
