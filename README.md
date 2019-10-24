@@ -49,7 +49,7 @@ $ npm install apollo-client @apollo/react-hooks apollo-link-http apollo-cache-in
 
 När dessa installerats så öppnar vi `src/index.js` för att sätta upp en `ApolloClient` och göra den tillgänglig för klienten.
 
-`ApolloClient` behöver dels en länk som används för att prata med servern samt en cache. Vi kommer här använda en `apollo-link-http` och en in-memory-cache.
+`ApolloClient` behöver dels en länk som används för att prata med servern samt en cache. Vi kommer här använda en `apollo-link-http` och en in-memory-cache. Detta kan också vara ett bra tillfälle att lägga till stöd för [Apollo Client Devtools](https://github.com/apollographql/apollo-client-devtools) vilket görs med `connectDevTools: true` till `ApolloClient`.
 
 ```javascript
 import { createHttpLink } from "apollo-link-http";
@@ -62,7 +62,8 @@ const cache = new InMemoryCache();
 
 const client = new ApolloClient({
   link: httpLink,
-  cache
+  cache,
+  connectToDevTools: true // Check environment development and set to false in prod
 });
 ```
 
@@ -88,7 +89,6 @@ För att använda GraphQL från klienten måste vi definiera vår _Query_. Detta
 ```javascript
 import gql from "graphql-tag";
 
-// eslint-disable-next-line
 const GRAPHQL_QUERY = gql`
   query {
     getAll {
