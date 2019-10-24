@@ -271,6 +271,8 @@ const CHANGENAME_POKEMON = gql`
 Därefter ska vi använda mutationen med hjälp av `useMutation` som liknar `useQuery` väldigt mycket.
 
 ```javascript
+import { useQuery, useMutation } from "@apollo/react-hooks";
+
 function Pokemon({ pokemon: { id, name } }) {
   const [mutation, { loading, error }] = useMutation(CHANGENAME_POKEMON, {
     variables: {
