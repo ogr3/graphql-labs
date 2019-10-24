@@ -137,4 +137,109 @@ Kom ihåg att du alltid kan gå till [http://localhost:4000/graphql](http://loca
 
 ## Labb 3 - Anropa en Rest-endpoint
 
+Vårt backend har även stöd för ett enkelt Rest-anrop på [http://localhost:4000/api/random_pokemons/5](http://localhost:4000/api/random_pokemons/5). Denna endpoint returner en lista med så många Pokemon man ber om.
+
+I denna labb ska vi lägga till stöd i vår klient för att anropa denna endpoint via GraphQL för att på så sätt kunna kombinera data från flera källor i samma förfrågning.
+
+Precis som i fallet när vi ville prata med vår GraphQL-endpoint måste vi här lägga till en `ApolloLink` för att prata med vårt Rest-API. Det görs via paketet `apollo-link-rest` så vi måste installera det och även två andra paket som vi behöver.
+
+```
+$ npm install apollo-link-rest apollo-link graphql-anywhere
+```
+
+Nästa steg blir att använda oss av detta paket för att skapa en länk till APIet. I `index.js`, lägg till följande kod och ändra skapandet av `ApolloClient` enligt följande.
+
+```javascript
+import { ApolloLink } from "apollo-link";
+import { RestLink } from "apollo-link-rest";
+
+// Create restLink
+const restLink = new RestLink({ uri: "http://localhost:4000/api" });
+
+// Update the ApolloLink to create a single link from a list of links
+const client = new ApolloClient({
+  link: ApolloLink.from([restLink, httpLink]),
+  cache
+});
+```
+
+Med länken på plats kan vi lägga till en förfrågning mot den i `App.js`. Utvidga `GRAPHQL_QUERY` till att även fråga:
+
+```javascript
+const GRAPHQL_QUERY = gql`
+  query {
+    getAll {
+      id
+      name
+      thumbnail
+      stats {
+        HP
+      }
+    }
+
+    random @rest(type: "Pokemon", path: "/random_pokemons/3") {
+      id
+      name
+      thumbnail
+      statl @type(name: "Stats") {
+        HP
+      }
+    }
+  }
+`;
+
+// The new result can now be used when rendering the component as well
+function App() {
+  const { loading, error, data } = useQuery(GRAPHQL_QUERY);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <div>
+      Random pokemons:
+      <ul>
+        {data.random.map(pokemon => (
+          <li key={pokemon.id}>{pokemon.name}</li>
+        ))}
+      </ul>
+      All pokemons:
+      <ul>
+        {data.getAll.map(pokemon => (
+          <li key={pokemon.id}>{pokemon.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+Som du kan se finns det två nya direktiv i denna förfrågan `@rest` och `@type`. Den tidigare hjälper ApolloClient att använda rätt länk medan `@type` är ett sätt att sätta metafältet `__typename` på nästlade objekt. Vi kan förflytta detta till skapandet av `restLink` genom att skicka med `typePatcher` när vi skapar den.
+
+```javascript
+const restLink = new RestLink({
+  uri: "http://localhost:4000/api",
+  typePatcher: {
+    Pokemon: (data, outerType, patchDeeper) => {
+      if (data.stats != null) {
+        data.stats = {
+          __typename: "Stats",
+          ...data.stats
+        };
+      }
+      return data;
+    }
+  }
+});
+```
+
 ## Labb 4 - Lägg till Mutation
+
+```
+
+```
