@@ -186,7 +186,7 @@ const GRAPHQL_QUERY = gql`
       id
       name
       thumbnail
-      statl @type(name: "Stats") {
+      stats @type(name: "Stats") {
         HP
       }
     }
