@@ -16,18 +16,14 @@ function filterTypes(allTypes, ids) {
 }
 
 function changeName(id, newName) {
-  console.log("Changing name", id, newName);
   const pokemon = pokedex.find(pokemon => {
-    if (pokemon.id == "1") {
-      console.log("Found Bulba", pokemon);
-    }
     return pokemon.id == id;
   });
+
   if (pokemon) {
     pokemon.name = newName;
   }
 
-  console.log("New pokemon:", pokemon);
   return pokemon;
 }
 

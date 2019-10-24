@@ -108,6 +108,11 @@ Det finns två sätt att anropa vår _Query_. Antingen via en _Higher Order Comp
 ```javascript
 import { useQuery } from "@apollo/react-hooks";
 
+// Simple component to render a Pokemon
+function Pokemon({ pokemon: { name } }) {
+  return (<li>{name}</li>)
+}
+
 function App() {
   const { loading, error, data } = useQuery(GRAPHQL_QUERY);
 
@@ -125,7 +130,7 @@ function App() {
   return (
     <div>All pokemons:
       <ul>
-        {data.getAll.map(pokemon => <li key={pokemon.id}>{pokemon.name}</li>)}
+        {data.getAll.map(pokemon => <Pokemon key={pokemon.id} pokemon={pokemon}/>)}
       </ul>
     </div>
   )
@@ -205,13 +210,13 @@ function App() {
       Random pokemons:
       <ul>
         {data.random.map(pokemon => (
-          <li key={pokemon.id}>{pokemon.name}</li>
+          <Pokemon key={pokemon.id} pokemon={pokemon} />
         ))}
       </ul>
       All pokemons:
       <ul>
         {data.getAll.map(pokemon => (
-          <li key={pokemon.id}>{pokemon.name}</li>
+          <Pokemon key={pokemon.id} pokemon={pokemon} />
         ))}
       </ul>
     </div>
@@ -240,6 +245,48 @@ const restLink = new RestLink({
 
 ## Labb 4 - Lägg till Mutation
 
+**Standby for contrived example**
+
+I servern finns även stöd för en mutation vid namn `changeName`. Den tar ett `id` och `newName` och byter namn på den Pokemonen. I denna labb ska vi använda det till att göra en enkel `onClick` som tar bort sista bokstaven i namnet.
+
+Här behöver vi bara modifiera vår `Pokemon`-komponent till att använda en Mutation.
+
+I `App.js`, börja med att definiera mutation vi ska använda:
+
+```javascript
+const CHANGENAME_POKEMON = gql`
+  mutation DeletePokemon($pokemonId: ID!, $newName: String!) {
+    changeName(id: $pokemonId, newName: $newName) {
+      id
+      name
+      thumbnail
+      stats {
+        HP
+      }
+    }
+  }
+`;
 ```
 
+Därefter ska vi använda mutationen med hjälp av `useMutation` som liknar `useQuery` väldigt mycket.
+
+```javascript
+function Pokemon({ pokemon: { id, name } }) {
+  const [mutation, { loading, error }] = useMutation(CHANGENAME_POKEMON, {
+    variables: {
+      pokemonId: id,
+      newName: name.slice(0, -1)
+    }
+  });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return <li onClick={mutation}>{name}</li>;
+}
 ```
