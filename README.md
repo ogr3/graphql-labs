@@ -292,3 +292,182 @@ function Pokemon({ pokemon: { id, name } }) {
   return <li onClick={mutation}>{name}</li>;
 }
 ```
+
+## Labb 5: Lokalt state
+
+I denna del ska vi lägga till stöd för att klienten kan välja om den vill visa tumnaglar på alla Pokemons eller inte. Detta är state som inte hör hemma på servern utan vi vill behålla i klienten. I många React-appar skulle detta state ligga i Redux men här ska vi istället göra det tillgängligt via GraphQL genom att lägga det i den lokala cachen.
+
+Skapa en fil `state.js` med följande innehåll. Här lägger vi till en
+
+```javascript
+import gql from "graphql-tag";
+
+export const GET_SHOW_THUMBNAILS = gql`
+  query ShowThumbnails {
+    showThumbnails @client
+  }
+`;
+
+export const TOGGLE_SHOW_THUMBNAILS = gql`
+  mutation ToggleShowThumbnails {
+    toggleShowThumbnails @client
+  }
+`;
+
+// Define the schema for the local state
+export const typeDefs = gql`
+  extend type Query {
+    showThumbnails: Boolean!
+  }
+
+  extend type Mutation {
+    toggleShowThumbnails: Boolean!
+  }
+`;
+
+// Implement local resolvers to update the state
+export const resolvers = {
+  Mutation: {
+    toggleShowThumbnails: (_, _args, { cache }) => {
+      const data = cache.readQuery({ query: GET_SHOW_THUMBNAILS });
+      const newData = {
+        ...data,
+        showThumbnails: !data.showThumbnails
+      };
+      cache.writeData({ data: newData });
+      return newData.showThumbnails;
+    }
+  }
+};
+
+export const initialData = {
+  showThumbnails: false
+};
+```
+
+Med `state.js` på plats kan vi nu använda de exporterade konstanterna för att utöka vår ApolloClient i `index.js`.
+
+```javascript
+import { typeDefs, resolvers, initialData } from "./state";
+
+const client = new ApolloClient({
+  link: ApolloLink.from([restLink, httpLink]),
+  cache,
+  connectToDevTools: true,
+  typeDefs, // Add the schema definition for the local state
+  resolvers // Add the resolvers for the local state
+});
+
+// Write the initial state to the GraphQL cache
+cache.writeData({
+  data: initialData
+});
+```
+
+Slutligen ska vi använda statet ifrån vår `App.js`.
+
+```javascript
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { TOGGLE_SHOW_THUMBNAILS } from "./state";
+
+// Extend the query with
+
+const GRAPHQL_QUERY = gql`
+  query {
+    getAll {
+      id
+      name
+      thumbnail
+      stats {
+        HP
+      }
+    }
+
+    random @rest(type: "Pokemon", path: "/random_pokemons/3") {
+      id
+      name
+      thumbnail
+      stats {
+        HP
+      }
+    }
+    # Add this
+    showThumbnails @client
+  }
+`;
+
+// Extend our Pokemon component to read a thumbnail when requested
+function Pokemon({ pokemon: { id, name, thumbnail }, showThumbnail }) {
+  const [mutation, { loading, error }] = useMutation(CHANGENAME_POKEMON, {
+    variables: {
+      pokemonId: id,
+      newName: name.slice(0, -1)
+    }
+  });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <li onClick={mutation}>
+      {name}
+      {showThumbnail && (
+        <img alt="thumbnail" src={`http://localhost:4000${thumbnail}`} />
+      )}
+    </li>
+  );
+}
+```
+
+For now, let's simply add a button at the top of our page that allows us to toggle the value, you can later make this prettier if there is time!
+
+```javascript
+function ToggleShowThumbnailsButton() {
+  const [toggle] = useMutation(TOGGLE_SHOW_THUMBNAILS);
+  return <button onClick={toggle}>Toggle Show Thumbnails</button>;
+}
+
+// And render it in App
+function App() {
+  const { loading, error, data } = useQuery(GRAPHQL_QUERY);
+
+  // Show some kind of spinner while loading
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // Inform the user that an error occured
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // At this point we can be sure that `data` is set with the result of our query
+  return (
+    <div>
+      <ToggleShowThumbnailsButton />
+      <br />
+      Random pokemons:
+      <ul>
+        {data.random.map(pokemon => (
+          <Pokemon
+            key={pokemon.id}
+            pokemon={pokemon}
+            showThumbnail={data.showThumbnails} {/* This uses the data from our updated query */}
+          />
+        ))}
+      </ul>
+      All pokemons:
+      <ul>
+        {data.getAll.map(pokemon => (
+          <Pokemon key={pokemon.id} pokemon={pokemon} />
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
