@@ -457,7 +457,7 @@ function App() {
           <Pokemon
             key={pokemon.id}
             pokemon={pokemon}
-            showThumbnail={data.showThumbnails} {/* This uses the data from our updated query */}
+            showThumbnail={data.showThumbnails}
           />
         ))}
       </ul>
