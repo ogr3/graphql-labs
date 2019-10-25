@@ -67,8 +67,8 @@ function Pokemon({ pokemon, showThumbnail }) {
   });
 
   return (<li>
-    <h3 onClick={mutation}>{pokemon.name}</h3>
-    <ul>
+    <div className='pokemon-header' onClick={mutation}>{pokemon.name}</div>
+    <ul className='normal-list'>
       {showThumbnail && <li><img style={{ display: 'block' }} src={`//localhost:4000${pokemon.thumbnail}` }/></li>}
       <li>Pokédex: {pokemon.id}</li>
       <li>Attack: {pokemon.stats.Attack}</li>
@@ -98,13 +98,13 @@ function App() {
         <ToggleShowThumbnailsButton />
         <br/>
         Random pokemons:
-      <ul>
+      <ul className='inline-list'>
         {data.random.map(pokemon => (
             <Pokemon key={pokemon.id} pokemon={pokemon} showThumbnail={data.showThumbnails}/>
         ))}
       </ul>
       All pokemons:
-        <ul>
+        <ul className='inline-list'>
           {data.getAll.map(pokemon => <Pokemon key={pokemon.id} pokemon={pokemon} showThumbnail={data.showThumbnails}/>)}
         </ul>
       </div>
